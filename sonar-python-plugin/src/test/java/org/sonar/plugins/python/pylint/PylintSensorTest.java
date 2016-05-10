@@ -49,17 +49,15 @@ public class PylintSensorTest {
         .setName("Invalid name")
         .activate()
         .build();
-    fileSystem = new DefaultFileSystem();
-    fileSystem.setBaseDir(new File("src/test/resources/org/sonar/plugins/python/pylint"));
+    fileSystem = new DefaultFileSystem(new File("src/test/resources/org/sonar/plugins/python/pylint"));
     fileSystem.setWorkDir(new File("target/"));
-    DefaultInputFile inputFile = new DefaultInputFile("src/test/resources/example_project/example.py").setLanguage(Python.KEY);
-    inputFile.setAbsolutePath((new File("src/test/resources/example_project/example.py")).getAbsolutePath());
+    DefaultInputFile inputFile = new DefaultInputFile("moduleKey", "src/test/resources/example_project/example.py").setLanguage(Python.KEY);
     fileSystem.add(inputFile);
   }
 
   @Test
   public void shouldExecuteOnlyWhenNecessary() {
-    DefaultFileSystem fileSystemForeign = new DefaultFileSystem();
+    DefaultFileSystem fileSystemForeign = new DefaultFileSystem(new File("."));
 
     Project project = mock(Project.class);
 

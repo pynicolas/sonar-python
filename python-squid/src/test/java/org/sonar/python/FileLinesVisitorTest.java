@@ -44,11 +44,11 @@ public class FileLinesVisitorTest {
   @Test
   public void test() {
     FileLinesContextFactory fileLinesContextFactory = mock(FileLinesContextFactory.class);
-    DefaultFileSystem fileSystem = new DefaultFileSystem();
+    DefaultFileSystem fileSystem = new DefaultFileSystem(BASE_DIR);
     FileLinesContext fileLinesContext = mock(FileLinesContext.class);
 
     File file = new File(BASE_DIR, "file_lines.py");
-    InputFile inputFile = new DefaultInputFile(file.getPath());
+    DefaultInputFile inputFile = new DefaultInputFile(file.getPath(), file.getPath());
 
     fileSystem.add(inputFile);
     when(fileLinesContextFactory.createFor(inputFile)).thenReturn(fileLinesContext);

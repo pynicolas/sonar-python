@@ -21,15 +21,16 @@ package org.sonar.plugins.python.coverage;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.config.Settings;
+import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
-import org.sonar.plugins.python.Python;
 import org.sonar.api.resources.Resource;
-import org.sonar.api.measures.CoreMetrics;
+import org.sonar.plugins.python.Python;
 
 import java.io.File;
 
@@ -38,8 +39,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import org.mockito.Mockito;
 
 public class PythonCoverageSensorTest {
   PythonCoverageSensor sensor;
@@ -54,8 +53,7 @@ public class PythonCoverageSensorTest {
   public void setUp() {
     project = mock(Project.class);
     settings = new Settings();
-    fs = new DefaultFileSystem();
-    fs.setBaseDir(new File("src/test/resources/org/sonar/plugins/python"));
+    fs = new DefaultFileSystem(new File("src/test/resources/org/sonar/plugins/python"));
     fileWithConditionCoverage = getInputFile("sources/file2.py");
     fileWithoutConditionCoverage = getInputFile("sources/file1.py");
     fileWithoutCoverageInfo = getInputFile("sources/file3.py");
@@ -137,7 +135,7 @@ public class PythonCoverageSensorTest {
   }
 
   private DefaultInputFile getInputFile(String path) {
-    DefaultInputFile file = new DefaultInputFile(path);
+    DefaultInputFile file = new DefaultInputFile(path, path);
     file.setLanguage(Python.KEY).setLines(1);
     return file;
   }

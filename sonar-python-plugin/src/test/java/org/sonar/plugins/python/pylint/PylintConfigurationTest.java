@@ -41,8 +41,7 @@ public class PylintConfigurationTest {
 
   @Test
   public void shouldGetCorrectPylintPath() {
-    DefaultFileSystem fs = new DefaultFileSystem();
-    fs.setBaseDir(new File("/projectroot"));
+    DefaultFileSystem fs = new DefaultFileSystem(new File("/projectroot"));
 
     assertThat(pylintConfiguration.getPylintConfigPath(fs)).isNull();
 

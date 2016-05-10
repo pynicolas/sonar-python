@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
 public class PythonSquidSensorTest {
 
   private PythonSquidSensor sensor;
-  private DefaultFileSystem fs = new DefaultFileSystem();
+  private final DefaultFileSystem fs = new DefaultFileSystem(new File("."));
   ResourcePerspectives perspectives;
 
   @Before
@@ -73,15 +73,14 @@ public class PythonSquidSensorTest {
     Project project = mock(Project.class);
     assertThat(sensor.toString()).isEqualTo("PythonSquidSensor");
     assertThat(sensor.shouldExecuteOnProject(project)).isFalse();
-    fs.add(new DefaultInputFile("test.py").setLanguage(Python.KEY));
+    fs.add(new DefaultInputFile("moduleKey", "test.py").setLanguage(Python.KEY));
     assertThat(sensor.shouldExecuteOnProject(project)).isTrue();
   }
 
   @Test
   public void should_analyse() {
     String relativePath = "src/test/resources/org/sonar/plugins/python/code_chunks_2.py";
-    DefaultInputFile inputFile = new DefaultInputFile(relativePath).setLanguage(Python.KEY);
-    inputFile.setAbsolutePath((new File(relativePath)).getAbsolutePath());
+    DefaultInputFile inputFile = new DefaultInputFile(relativePath, relativePath).setLanguage(Python.KEY);
     fs.add(inputFile);
 
     Issuable issuable = mock(Issuable.class);
