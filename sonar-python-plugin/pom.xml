@@ -44,6 +44,35 @@
       <artifactId>python-checks</artifactId>
       <version>${project.version}</version>
     </dependency>
+    
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>14.0</version>
+      <exclusions>
+        <exclusion>
+          <!-- should be declared with scope provided -->
+          <groupId>com.google.code.findbugs</groupId>
+          <artifactId>jsr305</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>1.3.9</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.codehaus.sonar.sslr</groupId>
@@ -85,8 +114,8 @@
             <configuration>
               <rules>
                 <requireFilesSize>
-                  <maxsize>800000</maxsize>
-                  <minsize>600000</minsize>
+                  <maxsize>3200000</maxsize>
+                  <minsize>3100000</minsize>
                   <files>
                     <file>${project.build.directory}/${project.build.finalName}.jar</file>
                   </files>

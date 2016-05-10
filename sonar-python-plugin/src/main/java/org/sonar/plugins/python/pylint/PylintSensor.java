@@ -19,9 +19,10 @@
  */
 package org.sonar.plugins.python.pylint;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FilePredicates;
@@ -34,16 +35,14 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.python.Python;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 public class PylintSensor implements Sensor {
   public static final String REPORT_PATH_KEY = "sonar.python.pylint.reportPath";
 
-  private static final Logger LOG = LoggerFactory.getLogger(PylintSensor.class);
+  private static final Logger LOG = Loggers.get(PylintSensor.class);
 
   private ActiveRules activeRules;
   private PylintConfiguration conf;

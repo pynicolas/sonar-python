@@ -19,8 +19,13 @@
  */
 package org.sonar.plugins.python.coverage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Nullable;
+import javax.xml.stream.XMLStreamException;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.PropertyType;
@@ -35,17 +40,11 @@ import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.measures.PropertiesBuilder;
 import org.sonar.api.resources.Project;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.python.EmptyReportException;
 import org.sonar.plugins.python.Python;
 import org.sonar.plugins.python.PythonReportSensor;
-
-import javax.annotation.Nullable;
-import javax.xml.stream.XMLStreamException;
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.HashSet;
 
 @Properties({
     @Property(
@@ -82,7 +81,7 @@ import java.util.HashSet;
 })
 public class PythonCoverageSensor extends PythonReportSensor {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PythonCoverageSensor.class);
+  private static final Logger LOG = Loggers.get(PythonCoverageSensor.class);
 
   private enum CoverageType {
     UT_COVERAGE, IT_COVERAGE, OVERALL_COVERAGE

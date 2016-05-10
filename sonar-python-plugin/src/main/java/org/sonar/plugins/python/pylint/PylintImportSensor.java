@@ -19,8 +19,12 @@
  */
 package org.sonar.plugins.python.pylint;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+import javax.annotation.Nullable;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.batch.SensorContext;
@@ -34,15 +38,10 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.python.Python;
 import org.sonar.plugins.python.PythonReportSensor;
-
-import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
 
 @Properties({
     @Property(
@@ -57,7 +56,7 @@ public class PylintImportSensor extends PythonReportSensor {
   public static final String REPORT_PATH_KEY = "sonar.python.pylint.reportPath";
   private static final String DEFAULT_REPORT_PATH = "pylint-reports/pylint-result-*.txt";
 
-  private static final Logger LOG = LoggerFactory.getLogger(PylintImportSensor.class);
+  private static final Logger LOG = Loggers.get(PylintImportSensor.class);
 
   private ActiveRules activeRules;
   private ResourcePerspectives resourcePerspectives;

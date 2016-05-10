@@ -19,9 +19,13 @@
  */
 package org.sonar.plugins.python.xunit;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.xml.stream.XMLStreamException;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.PropertyType;
@@ -35,14 +39,9 @@ import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.StaxParser;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.python.PythonReportSensor;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Properties({
     @Property(
@@ -60,7 +59,7 @@ import java.util.Map;
         description = "If 'true', provides the test execution statistics only on project level, but makes the import procedure more mature",
         global = false, project = true) })
 public class PythonXUnitSensor extends PythonReportSensor {
-  private static final Logger LOG = LoggerFactory.getLogger(PythonXUnitSensor.class);
+  private static final Logger LOG = Loggers.get(PythonXUnitSensor.class);
 
   public static final String REPORT_PATH_KEY = "sonar.python.xunit.reportPath";
   public static final String DEFAULT_REPORT_PATH = "xunit-reports/xunit-result-*.xml";

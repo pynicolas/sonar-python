@@ -19,23 +19,21 @@
  */
 package org.sonar.plugins.python.coverage;
 
+import java.io.File;
+import java.util.Map;
+import javax.xml.stream.XMLStreamException;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.utils.StaxParser;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.plugins.python.EmptyReportException;
-
-import javax.xml.stream.XMLStreamException;
-
-import java.io.File;
-import java.util.Map;
 
 public class CoberturaParser {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CoberturaParser.class);
+  private static final Logger LOG = Loggers.get(CoberturaParser.class);
 
   public void parseReport(File xmlFile, final Map<String, CoverageMeasuresBuilder> coverageData) throws XMLStreamException {
     LOG.info("Parsing report '{}'", xmlFile);
