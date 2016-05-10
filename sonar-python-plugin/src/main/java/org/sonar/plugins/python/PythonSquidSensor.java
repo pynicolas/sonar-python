@@ -21,6 +21,11 @@ package org.sonar.plugins.python;
 
 import com.google.common.collect.Lists;
 import com.sonar.sslr.api.Grammar;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FilePredicates;
@@ -37,6 +42,7 @@ import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.measures.RangeDistributionBuilder;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.python.PreciseIssue;
 import org.sonar.python.PythonAstScanner;
 import org.sonar.python.PythonConfiguration;
 import org.sonar.python.api.PythonMetric;
@@ -50,10 +56,6 @@ import org.sonar.squidbridge.api.SourceFile;
 import org.sonar.squidbridge.api.SourceFunction;
 import org.sonar.squidbridge.indexer.QueryByParent;
 import org.sonar.squidbridge.indexer.QueryByType;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
 
 public final class PythonSquidSensor implements Sensor {
 
@@ -89,12 +91,17 @@ public final class PythonSquidSensor implements Sensor {
 
     List<SquidAstVisitor<Grammar>> visitors = Lists.newArrayList(checks.all());
     visitors.add(new FileLinesVisitor(fileLinesContextFactory, fileSystem));
-    this.scanner = PythonAstScanner.create(createConfiguration(), visitors.toArray(new SquidAstVisitor[visitors.size()]));
+    Set<PreciseIssue> preciseIssues = new HashSet<>();
+    this.scanner = PythonAstScanner.create(createConfiguration(), preciseIssues, visitors.toArray(new SquidAstVisitor[visitors.size()]));
     FilePredicates p = fileSystem.predicates();
     scanner.scanFiles(Lists.newArrayList(fileSystem.files(p.and(p.hasType(InputFile.Type.MAIN), p.hasLanguage(Python.KEY)))));
 
     Collection<SourceCode> squidSourceFiles = scanner.getIndex().search(new QueryByType(SourceFile.class));
     save(squidSourceFiles);
+
+    for (PreciseIssue preciseIssue : preciseIssues) {
+      preciseIssue.save(checks, context);
+    }
   }
 
   private PythonConfiguration createConfiguration() {

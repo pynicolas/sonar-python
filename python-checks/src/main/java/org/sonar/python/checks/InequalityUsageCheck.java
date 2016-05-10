@@ -24,6 +24,7 @@ import com.sonar.sslr.api.Grammar;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
+import org.sonar.python.PythonSquidContext;
 import org.sonar.python.api.PythonPunctuator;
 import org.sonar.squidbridge.annotations.ActivatedByDefault;
 import org.sonar.squidbridge.annotations.SqaleConstantRemediation;
@@ -50,7 +51,7 @@ public class InequalityUsageCheck extends SquidCheck<Grammar> {
 
   @Override
   public void visitNode(AstNode astNode) {
-    getContext().createLineViolation(this, "Replace \"<>\" by \"!=\".", astNode);
+    ((PythonSquidContext) getContext()).addPreciseIssue(this, "Replace \"<>\" by \"!=\".", astNode);
   }
 
 }

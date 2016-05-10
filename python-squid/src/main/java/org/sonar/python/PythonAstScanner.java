@@ -24,6 +24,10 @@ import com.sonar.sslr.api.AstNode;
 import com.sonar.sslr.api.AstNodeType;
 import com.sonar.sslr.api.Grammar;
 import com.sonar.sslr.impl.Parser;
+import java.io.File;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import org.sonar.python.api.PythonGrammar;
 import org.sonar.python.api.PythonKeyword;
 import org.sonar.python.api.PythonMetric;
@@ -33,7 +37,6 @@ import org.sonar.squidbridge.CommentAnalyser;
 import org.sonar.squidbridge.SourceCodeBuilderCallback;
 import org.sonar.squidbridge.SourceCodeBuilderVisitor;
 import org.sonar.squidbridge.SquidAstVisitor;
-import org.sonar.squidbridge.SquidAstVisitorContextImpl;
 import org.sonar.squidbridge.api.SourceClass;
 import org.sonar.squidbridge.api.SourceCode;
 import org.sonar.squidbridge.api.SourceFile;
@@ -44,9 +47,6 @@ import org.sonar.squidbridge.metrics.CommentsVisitor;
 import org.sonar.squidbridge.metrics.ComplexityVisitor;
 import org.sonar.squidbridge.metrics.CounterVisitor;
 import org.sonar.squidbridge.metrics.LinesVisitor;
-
-import java.io.File;
-import java.util.Collection;
 
 public final class PythonAstScanner {
 
@@ -70,7 +70,11 @@ public final class PythonAstScanner {
   }
 
   public static AstScanner<Grammar> create(PythonConfiguration conf, SquidAstVisitor<Grammar>... visitors) {
-    final SquidAstVisitorContextImpl<Grammar> context = new SquidAstVisitorContextImpl<Grammar>(new SourceProject("Python Project"));
+    return create(conf, new HashSet<PreciseIssue>(), visitors);
+  }
+
+  public static AstScanner<Grammar> create(PythonConfiguration conf, Set<PreciseIssue> preciseIssues, SquidAstVisitor<Grammar>... visitors) {
+    final PythonSquidContext context = new PythonSquidContext(new SourceProject("Python Project"), preciseIssues);
     final Parser<Grammar> parser = PythonParser.create(conf);
 
     AstScanner.Builder<Grammar> builder = AstScanner.<Grammar>builder(context).setBaseParser(parser);

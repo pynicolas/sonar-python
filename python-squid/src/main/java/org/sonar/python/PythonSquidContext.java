@@ -17,26 +17,26 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.python.checks;
+package org.sonar.python;
 
-import java.io.File;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.sonar.python.PythonAstScanner;
-import org.sonar.squidbridge.api.SourceFile;
-import org.sonar.squidbridge.checks.CheckMessagesVerifier;
+import com.sonar.sslr.api.AstNode;
+import com.sonar.sslr.api.Grammar;
+import java.util.Set;
+import org.sonar.squidbridge.SquidAstVisitor;
+import org.sonar.squidbridge.SquidAstVisitorContextImpl;
+import org.sonar.squidbridge.api.SourceProject;
 
-public class InequalityUsageCheckTest {
+public class PythonSquidContext extends SquidAstVisitorContextImpl<Grammar> {
 
-  @Test
-  @Ignore // TODO We need to be able to test precise issues...
-  public void test() {
-    InequalityUsageCheck check = new InequalityUsageCheck();
+  private final Set<PreciseIssue> preciseIssues;
 
-    SourceFile file = PythonAstScanner.scanSingleFile(new File("src/test/resources/checks/inequalityUsage.py"), check);
-    CheckMessagesVerifier.verify(file.getCheckMessages())
-        .next().atLine(1).withMessage("Replace \"<>\" by \"!=\".")
-        .noMore();
+  public PythonSquidContext(SourceProject project, Set<PreciseIssue> preciseIssues) {
+    super(project);
+    this.preciseIssues = preciseIssues;
+  }
+
+  public void addPreciseIssue(SquidAstVisitor<Grammar> check, String message, AstNode astNode) {
+    preciseIssues.add(new PreciseIssue(check, getFile(), astNode, message));
   }
 
 }
